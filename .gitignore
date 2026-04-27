@@ -49,9 +49,12 @@ ehthumbs.db
 supabase/.env.local
 supabase/.env.*.local
 supabase/.temp/
+supabase/config.toml
 
 # Misc
 .cache/
 .parcel-cache
 .next
 out/
+
+
