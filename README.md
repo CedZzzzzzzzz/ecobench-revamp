@@ -151,8 +151,3 @@ The dashboard expects a FastAPI service running at the URL defined by `VITE_API_
 | Mariem O. Manato | System Architect and Electrical Engineer |
 | Quinn Harvey G. Pineda | Project Coordinator and Technical Specialist |
 
-## Institution
-
-Polytechnic University of the Philippines - Institute of Technology  
-Sta. Mesa, Manila 1016, Philippines  
-Contact: ecobench.studio@pup.edu.ph
