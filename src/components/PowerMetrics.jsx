@@ -1,7 +1,7 @@
 const PowerMetrics = ({ data }) => {
-  const totalWatts = data?.total_incoming_watts || 0
-  const chargeRate = data?.charge_rate || 0
-  const balance = data?.energy_balance || 0
+  const totalWatts = data?.solarPower || 0
+  const chargeRate = data?.chargeRate || 0
+  const balance = data?.energyBalance || 0
 
   return (
     <div className="eink-card">
@@ -22,7 +22,7 @@ const PowerMetrics = ({ data }) => {
         </div>
         <div className="metric-box highlight">
           <div className="metric-label">RUNTIME</div>
-          <div className="metric-value text-blue-700">{(data?.estimated_runtime || 0).toFixed(1)}h</div>
+          <div className="metric-value text-blue-700">{(data?.estimatedRuntime || 0).toFixed(1)}h</div>
         </div>
       </div>
 
