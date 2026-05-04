@@ -1,7 +1,7 @@
 const BatteryStatus = ({ data }) => {
-  const batteryPercent = data?.battery_percentage || 0
-  const voltage = data?.system_voltage || 0
-  const isCharging = (data?.charge_rate || 0) > 0
+  const batteryPercent = data?.batteryLevel || 0
+  const voltage = data?.voltage || 0
+  const isCharging = (data?.chargeRate || 0) > 0
 
   return (
     <div className="eink-card">
