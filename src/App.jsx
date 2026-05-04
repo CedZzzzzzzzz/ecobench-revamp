@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { supabase } from './lib/supabase'
+import { Analytics } from '@vercel/analytics/react'
 
 // Pages
 import Home from './pages/Home'
