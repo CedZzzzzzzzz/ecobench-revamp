@@ -1,6 +1,6 @@
 const SystemStatus = ({ data }) => {
   const status = data?.status || 'online'
-  const lastUpdate = new Date(data?.last_update || new Date())
+  const lastUpdate = new Date(data?.timestamp || new Date())
   const now = new Date()
   const secondsSinceUpdate = (now - lastUpdate) / 1000
 
