@@ -197,10 +197,10 @@ export default function Home() {
       {/* CTA Section */}
       <section className="cta-section relative py-24 overflow-hidden">
         <div className="absolute inset-0 bg-slate-900 -z-10"></div>
-        {/* Upper Left Glow */}
-        <div className="absolute -top-40 -left-40 w-96 h-96 bg-cyan-400/30 rounded-full blur-3xl -z-10"></div>
-        {/* Lower Right Glow */}
-        <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-rose-500/30 rounded-full blur-3xl -z-10"></div>
+        {/* Upper Left Glow - Hidden on mobile */}
+        <div className="absolute -top-40 -left-40 w-96 h-96 bg-cyan-400/30 rounded-full blur-3xl -z-10 hidden md:block"></div>
+        {/* Lower Right Glow - Hidden on mobile */}
+        <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-rose-500/30 rounded-full blur-3xl -z-10 hidden md:block"></div>
 
         <div className="container mx-auto px-4 text-center relative z-10">
           <div className="flex justify-center mb-8">
