@@ -123,7 +123,7 @@ const Dashboard = () => {
               </div>
               <div className="power-source-name">SOLAR PANEL</div>
               <div className="power-source-status">Active</div>
-              <div className="power-source-value">{(data?.solar_power || 132.5).toFixed(1)}W</div>
+              <div className="power-source-value">{(data?.solarPower || 132.5).toFixed(1)}W</div>
               <div className="power-source-graph">
                 <div className="graph-bar" style={{ height: '85%' }}></div>
                 <div className="graph-bar" style={{ height: '92%' }}></div>
@@ -138,11 +138,11 @@ const Dashboard = () => {
                 <i className="fas fa-cog"></i>
               </div>
               <div className="power-source-name">HAND CRANK</div>
-              <div className="power-source-status">{(data?.crank_power || 0) > 0 ? 'Active' : 'Standby'}</div>
-              <div className="power-source-value">{(data?.crank_power || 0).toFixed(1)}W</div>
+              <div className="power-source-status">{(data?.crankPower || 0) > 0 ? 'Active' : 'Standby'}</div>
+              <div className="power-source-value">{(data?.crankPower || 0).toFixed(1)}W</div>
               <div className="crank-detector">
                 <i className="fas fa-microchip"></i>
-                <span>Motion Sensor: {(data?.crank_power || 0) > 0 ? 'Active' : 'Idle'}</span>
+                <span>Motion Sensor: {(data?.crankPower || 0) > 0 ? 'Active' : 'Idle'}</span>
               </div>
             </div>
 
@@ -151,8 +151,8 @@ const Dashboard = () => {
                 <i className="fas fa-database"></i>
               </div>
               <div className="power-source-name">BATTERY BANK</div>
-              <div className="power-source-status">{(data?.battery_percentage || 0) < 80 ? 'Charging' : 'Full'}</div>
-              <div className="power-source-value">{(data?.charge_rate || 0).toFixed(1)}A</div>
+              <div className="power-source-status">{(data?.batteryLevel || 0) < 80 ? 'Charging' : 'Full'}</div>
+              <div className="power-source-value">{(data?.chargeRate || 0).toFixed(1)}A</div>
               <div className="battery-health">
                 <div className="health-label">Health</div>
                 <div className="health-bar">
@@ -226,7 +226,7 @@ const Dashboard = () => {
               <div className="info-icon system-ok"><i className="fas fa-check-circle"></i></div>
               <div className="info-content">
                 <div className="info-label">SYSTEM STATUS</div>
-                <div className="info-value status-online-text">{(data?.system_status || 'OFFLINE').toUpperCase()}</div>
+                <div className="info-value status-online-text">{(data?.status || 'OFFLINE').toUpperCase()}</div>
                 <div className="info-detail">{(data?.system_message || 'Waiting for data...')}</div>
               </div>
             </div>
