@@ -1,10 +1,32 @@
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { signOut } from '../lib/supabase'
 
 const Sidebar = () => {
+  const location = useLocation()
+
   const handleSignOut = async () => {
     await signOut()
     window.location.href = '/'
+  }
+
+  const isActive = (path) => location.pathname === path
+
+  const getLinkStyle = (path) => {
+    const isCurrentPage = isActive(path)
+    return {
+      display: 'flex',
+      alignItems: 'center',
+      gap: '12px',
+      padding: '12px 16px',
+      background: isCurrentPage ? 'rgba(255,255,255,0.25)' : 'transparent',
+      color: isCurrentPage ? '#ffffff' : 'rgba(255,255,255,0.7)',
+      borderRadius: '8px',
+      fontWeight: 600,
+      textDecoration: 'none',
+      transition: 'all 0.3s ease',
+      fontSize: '15px',
+      border: isCurrentPage ? '1px solid rgba(251, 191, 36, 0.4)' : '1px solid transparent'
+    }
   }
 
   return (
@@ -46,27 +68,18 @@ const Sidebar = () => {
         <nav style={{ display: 'flex', flexDirection: 'column', gap: '8px', flex: 1 }}>
           <Link
             to="/dashboard"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '12px',
-              padding: '12px 16px',
-              background: 'rgba(255,255,255,0.15)',
-              color: '#ffffff',
-              borderRadius: '8px',
-              fontWeight: 600,
-              textDecoration: 'none',
-              transition: 'all 0.3s ease',
-              fontSize: '15px',
-              border: '1px solid rgba(251, 191, 36, 0.4)'
-            }}
+            style={getLinkStyle('/dashboard')}
             onMouseEnter={(e) => {
-              e.currentTarget.style.background = 'rgba(255,255,255,0.25)'
-              e.currentTarget.style.transform = 'translateX(4px)'
+              if (!isActive('/dashboard')) {
+                e.currentTarget.style.background = 'rgba(255,255,255,0.25)'
+                e.currentTarget.style.transform = 'translateX(4px)'
+              }
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.background = 'rgba(255,255,255,0.15)'
-              e.currentTarget.style.transform = 'translateX(0)'
+              if (!isActive('/dashboard')) {
+                e.currentTarget.style.background = 'rgba(255,255,255,0.15)'
+                e.currentTarget.style.transform = 'translateX(0)'
+              }
             }}
           >
             <span style={{ fontSize: '20px' }}>📊</span>
@@ -75,30 +88,22 @@ const Sidebar = () => {
 
           <Link
             to="/users"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '12px',
-              padding: '12px 16px',
-              color: 'rgba(255,255,255,0.7)',
-              borderRadius: '8px',
-              fontWeight: 600,
-              textDecoration: 'none',
-              transition: 'all 0.3s ease',
-              fontSize: '15px',
-              border: '1px solid transparent'
-            }}
+            style={getLinkStyle('/users')}
             onMouseEnter={(e) => {
-              e.currentTarget.style.background = 'rgba(255,255,255,0.1)'
-              e.currentTarget.style.color = '#ffffff'
-              e.currentTarget.style.border = '1px solid rgba(251, 191, 36, 0.4)'
-              e.currentTarget.style.transform = 'translateX(4px)'
+              if (!isActive('/users')) {
+                e.currentTarget.style.background = 'rgba(255,255,255,0.1)'
+                e.currentTarget.style.color = '#ffffff'
+                e.currentTarget.style.border = '1px solid rgba(251, 191, 36, 0.4)'
+                e.currentTarget.style.transform = 'translateX(4px)'
+              }
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.background = 'transparent'
-              e.currentTarget.style.color = 'rgba(255,255,255,0.7)'
-              e.currentTarget.style.border = '1px solid transparent'
-              e.currentTarget.style.transform = 'translateX(0)'
+              if (!isActive('/users')) {
+                e.currentTarget.style.background = 'transparent'
+                e.currentTarget.style.color = 'rgba(255,255,255,0.7)'
+                e.currentTarget.style.border = '1px solid transparent'
+                e.currentTarget.style.transform = 'translateX(0)'
+              }
             }}
           >
             <span style={{ fontSize: '20px' }}>👥</span>
@@ -116,8 +121,8 @@ const Sidebar = () => {
             padding: '12px 16px',
             width: '100%',
             color: 'rgba(255,255,255,0.8)',
-            background: 'rgba(239, 68, 68, 0.1)',
-            border: '1px solid rgba(239, 68, 68, 0.3)',
+            background: 'transparent',
+            border: '1px solid transparent',
             borderRadius: '8px',
             fontWeight: 600,
             textDecoration: 'none',
@@ -132,9 +137,9 @@ const Sidebar = () => {
             e.currentTarget.style.transform = 'translateX(4px)'
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.background = 'rgba(239, 68, 68, 0.1)'
+            e.currentTarget.style.background = 'transparent'
             e.currentTarget.style.color = 'rgba(255,255,255,0.8)'
-            e.currentTarget.style.border = '1px solid rgba(239, 68, 68, 0.3)'
+            e.currentTarget.style.border = '1px solid transparent'
             e.currentTarget.style.transform = 'translateX(0)'
           }}
         >
