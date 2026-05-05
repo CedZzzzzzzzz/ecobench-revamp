@@ -100,7 +100,7 @@ export const TEAM_MEMBERS = [
     color: "purple"
   },
   {
-    name: "Quinn harvey G. Pineda",
+    name: "Quinn Harvey G. Pineda",
     role: "Project Coordinator & Technical Specialist",
     image: "assets/img/member5.png",
     bio: "Coordinated project tasks and progress while providing technical support and implementation for the solar power component and overall system of the EcoBench.",

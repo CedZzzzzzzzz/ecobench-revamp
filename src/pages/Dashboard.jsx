@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef, useLayoutEffect } from 'react'
 import { useSensorData } from '../hooks/useSensorData.js'
 import '../styles/dashboard.css'
 import Sidebar from '../components/Sidebar'
@@ -9,10 +9,27 @@ import ProductionChart from '../components/ProductionChart'
 import SystemStatus from '../components/SystemStatus'
 
 const Dashboard = () => {
-  const { sensorData, loading, error } = useSensorData()
+  const { sensorData } = useSensorData()
   const [showUserMenu, setShowUserMenu] = useState(false)
   const [currentTime, setCurrentTime] = useState('')
   const [currentDate, setCurrentDate] = useState('')
+  const scrollPositionRef = useRef(0)
+  const prevSensorDataRef = useRef(null)
+
+  // Save scroll position BEFORE data changes
+  useEffect(() => {
+    if (sensorData && prevSensorDataRef.current && sensorData !== prevSensorDataRef.current) {
+      scrollPositionRef.current = window.scrollY
+    }
+    prevSensorDataRef.current = sensorData
+  }, [sensorData])
+
+  // Restore scroll position AFTER DOM is updated but BEFORE paint
+  useLayoutEffect(() => {
+    if (scrollPositionRef.current > 0 && sensorData) {
+      window.scrollTo(0, scrollPositionRef.current)
+    }
+  }, [sensorData])
 
   useEffect(() => {
     // Update time every second
@@ -28,37 +45,6 @@ const Dashboard = () => {
     const interval = setInterval(updateTime, 1000)
     return () => clearInterval(interval)
   }, [])
-
-
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-yellow-50">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-eco-green mx-auto mb-4"></div>
-          <p className="text-gray-600 font-poppins">Loading dashboard...</p>
-        </div>
-      </div>
-    )
-  }
-
-  if (error) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-50 to-orange-50">
-        <div className="text-center p-8 bg-white rounded-2xl shadow-xl max-w-md">
-          <div className="text-6xl mb-4">⚠️</div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Connection Error</h2>
-          <p className="text-gray-600 mb-4">{error}</p>
-          <button
-            onClick={() => window.location.reload()}
-            className="px-6 py-3 bg-eco-green text-white rounded-full font-semibold hover:bg-eco-green-dark transition"
-          >
-            Retry
-          </button>
-        </div>
-      </div>
-    )
-  }
 
   const data = sensorData || {}
 

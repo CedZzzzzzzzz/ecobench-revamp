@@ -1,14 +1,18 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 export const useSensorData = () => {
   const [sensorData, setSensorData] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const isInitialFetchRef = useRef(true)
 
   useEffect(() => {
     const fetchSensorData = async () => {
       try {
-        setLoading(true)
+        // Only show loading state on initial fetch
+        if (isInitialFetchRef.current) {
+          setLoading(true)
+        }
         
         // Call FastAPI backend (running on port 8000)
         const backendUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000'
@@ -46,12 +50,22 @@ export const useSensorData = () => {
         
         setSensorData(transformedData)
         setError(null)
+        
+        // Mark initial fetch as complete
+        if (isInitialFetchRef.current) {
+          isInitialFetchRef.current = false
+          setLoading(false)
+        }
       } catch (err) {
         console.error('Sensor fetch error:', err)
         setError(err.message || 'Failed to fetch sensor data')
         setSensorData(null)
-      } finally {
-        setLoading(false)
+        
+        // Mark initial fetch as complete even on error
+        if (isInitialFetchRef.current) {
+          isInitialFetchRef.current = false
+          setLoading(false)
+        }
       }
     }
 
