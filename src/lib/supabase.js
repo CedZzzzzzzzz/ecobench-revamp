@@ -5,6 +5,27 @@ const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
+export const checkEmailExists = async (email) => {
+  try {
+    // Try to check if email exists in profiles table
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('email')
+      .eq('email', email)
+      .maybeSingle();
+
+    if (error && error.code !== 'PGRST116') { 
+      console.error('Error checking email:', error);
+      return false;
+    }
+
+    return !!data; // Returns true if email exists
+  } catch (err) {
+    console.error('Error in checkEmailExists:', err);
+    return false;
+  }
+};
+
 export const signUp = async (email, password, username) => {
   try {
     const { data, error } = await supabase.auth.signUp({

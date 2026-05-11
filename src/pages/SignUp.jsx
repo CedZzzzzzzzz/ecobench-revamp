@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { signUp } from '../lib/supabase'
+import { signUp, checkEmailExists } from '../lib/supabase'
 
 const SignUp = () => {
   const [formData, setFormData] = useState({
@@ -11,6 +11,8 @@ const SignUp = () => {
   })
   const [errors, setErrors] = useState([])
   const [loading, setLoading] = useState(false)
+  const [showEmailModal, setShowEmailModal] = useState(false)
+  const [showSuccessModal, setShowSuccessModal] = useState(false)
   const navigate = useNavigate()
 
   const handleChange = (e) => {
@@ -52,17 +54,37 @@ const SignUp = () => {
       return
     }
 
+    // Check if email already exists
+    const emailExists = await checkEmailExists(email)
+    if (emailExists) {
+      setShowEmailModal(true)
+      setLoading(false)
+      return
+    }
+
     const { data, error } = await signUp(email, password, username)
 
     if (error) {
+      console.log('Signup error:', error);
+      console.log('Error message:', error.message);
+      console.log('Error code:', error.code);
+      console.log('Full error object:', JSON.stringify(error, null, 2));
+      
       let message = 'Something went wrong. Please try again.'
 
-      // Handle duplicate email safely
+      // Handle duplicate email specifically - check multiple error message variations
+      const errorMsg = error.message?.toLowerCase() || ''
       if (
-        error.message.toLowerCase().includes('already registered') ||
-        error.message.toLowerCase().includes('already exists')
+        errorMsg.includes('already registered') ||
+        errorMsg.includes('already exists') ||
+        errorMsg.includes('user already exists') ||
+        errorMsg.includes('duplicate') ||
+        errorMsg.includes('user with email already exists') ||
+        error.code === 'user_already_exists'
       ) {
-        message = 'This email cannot be used. Please try signing in with another email.'
+        setShowEmailModal(true)
+        setLoading(false)
+        return
       }
 
       setErrors([message])
@@ -70,8 +92,9 @@ const SignUp = () => {
       return
     }
 
-    alert('Account created successfully! Please check your email to verify your account.')
-    navigate('/signin')
+    console.log('Signup successful:', data);
+    setShowSuccessModal(true)
+    setLoading(false)
   }
 
   return (
@@ -87,6 +110,102 @@ const SignUp = () => {
           display: none;
         }
       `}</style>
+
+      {/* Email Already Exists Modal */}
+      {showEmailModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full mx-4 p-8 animate-in fade-in zoom-in duration-300" style={{
+            animation: 'fadeInScale 0.3s ease-out'
+          }}>
+            <style>{`
+              @keyframes fadeInScale {
+                from {
+                  opacity: 0;
+                  transform: scale(0.95);
+                }
+                to {
+                  opacity: 1;
+                  transform: scale(1);
+                }
+              }
+            `}</style>
+            
+            {/* Warning Icon */}
+            <div className="flex justify-center mb-4">
+              <div className="w-16 h-16 rounded-full bg-red-100 flex items-center justify-center">
+                <span className="text-4xl">⚠️</span>
+              </div>
+            </div>
+
+            {/* Message */}
+            <h3 className="text-2xl font-bold text-center text-gray-800 mb-2">Email Already Exists</h3>
+            <p className="text-center text-gray-600 mb-6">
+              A user is already associated with this email account. Please try signing in with this email or use a different email to create a new account.
+            </p>
+
+            {/* Action Buttons */}
+            <div className="flex flex-col gap-3">
+              <button
+                onClick={() => navigate('/signin')}
+                className="w-full py-3 px-4 bg-green-600 hover:bg-green-700 text-white font-bold rounded-2xl transition-colors"
+                style={{ backgroundColor: '#86AD39' }}
+              >
+                Go to Sign In
+              </button>
+              <button
+                onClick={() => setShowEmailModal(false)}
+                className="w-full py-3 px-4 bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold rounded-2xl transition-colors"
+              >
+                Try Another Email
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Account Created Successfully Modal */}
+      {showSuccessModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full mx-4 p-8 animate-in fade-in zoom-in duration-300" style={{
+            animation: 'fadeInScale 0.3s ease-out'
+          }}>
+            <style>{`
+              @keyframes fadeInScale {
+                from {
+                  opacity: 0;
+                  transform: scale(0.95);
+                }
+                to {
+                  opacity: 1;
+                  transform: scale(1);
+                }
+              }
+            `}</style>
+            
+            {/* Success Icon */}
+            <div className="flex justify-center mb-4">
+              <div className="w-16 h-16 rounded-full flex items-center justify-center" style={{ backgroundColor: 'rgba(132, 173, 57, 0.1)' }}>
+                <span className="text-4xl">✓</span>
+              </div>
+            </div>
+
+            {/* Message */}
+            <h3 className="text-2xl font-bold text-center text-gray-800 mb-2">Account Created Successfully!</h3>
+            <p className="text-center text-gray-600 mb-6">
+              Please check your email to verify your account before signing in.
+            </p>
+
+            {/* Action Button */}
+            <button
+              onClick={() => navigate('/signin')}
+              className="w-full py-3 px-4 text-white font-bold rounded-2xl transition-colors"
+              style={{ backgroundColor: '#86AD39' }}
+            >
+              Go to Sign In
+            </button>
+          </div>
+        </div>
+      )}
       <div className="w-full max-w-md relative z-10 flex flex-col items-center max-h-screen overflow-y-auto hide-scrollbar">
         {/* Logo */}
         <div className="text-center mb-5 w-full flex justify-center">
